@@ -180,7 +180,7 @@ zav:
 	jmp kraj
 	
 
-	
+;--------------------------------------------------------------------------------pomeranje loptice-------------------------------------------	
 	MOVE_BALL PROC NEAR
 		
 		mov ax,BALL_VELOCITY_X    
@@ -199,7 +199,7 @@ divica:
 		cmp BALL_X,ax	          ;BALL_X > WINDOW_WIDTH - BALL_SIZE  - WINDOW_BOUNDS (sudar - desna ivica)
 		jl givica
 		call NEG_VELOCITY_X
-		mov boja, 03h
+		mov boja, 02h
 		
 givica:
 		mov ax,BALL_VELOCITY_Y
@@ -209,7 +209,7 @@ givica:
 		cmp BALL_Y,ax   		;BALL_Y < 0 + WINDOW_BOUNDS (sudar - gornja ivica)
 		jg dnjivica
 		call NEG_VELOCITY_Y 
-		mov boja, 04h
+		mov boja, 02h
 		
 dnjivica:
 		mov ax,WINDOW_HEIGHT	
@@ -235,6 +235,7 @@ pGore:
 		cmp BALL_X,ax
 		jg pBOCNE_strane
 		call NEG_VELOCITY_Y
+		mov boja, 03h
 	
 pBOCNE_strane:
 		mov ax, PLATFORMA_X
@@ -256,6 +257,7 @@ pBOCNE_strane:
 		cmp BALL_Y, ax
 		jg blok11
 		call NEG_VELOCITY_X
+		mov boja, 03h
 		
 blok11:
 		cmp unisten11, 0h			;proverava da li je blok vec unisten
@@ -281,6 +283,7 @@ blok11:
 		call dec_poeni
 		call dec_poeni
 		call dec_poeni
+		mov boja, 04h
 		
 blok12:
 		cmp unisten12, 0h
@@ -306,6 +309,7 @@ blok12:
 		call dec_poeni
 		call dec_poeni
 		call dec_poeni
+		mov boja, 04h
 		
 blok13:
 		cmp unisten13, 0h
@@ -331,6 +335,7 @@ blok13:
 		call dec_poeni
 		call dec_poeni
 		call dec_poeni
+		mov boja, 04h
 		
 blok14:
 		cmp unisten14, 0h
@@ -356,6 +361,7 @@ blok14:
 		call dec_poeni
 		call dec_poeni
 		call dec_poeni
+		mov boja, 04h
 		
 blok21:
 		cmp unisten21, 0h
@@ -380,6 +386,7 @@ blok21:
 		mov unisten21, 0h
 		call dec_poeni
 		call dec_poeni
+		mov boja, 05h
 		
 blok22:
 		cmp unisten22, 0h
@@ -404,6 +411,7 @@ blok22:
 		mov unisten22, 0h	
 		call dec_poeni
 		call dec_poeni
+		mov boja, 05h
 		
 blok23:
 		cmp unisten23, 0h
@@ -428,6 +436,7 @@ blok23:
 		mov unisten23, 0h
 		call dec_poeni
 		call dec_poeni
+		mov boja, 05h
 			
 blok24:
 		cmp unisten24, 0h
@@ -452,6 +461,7 @@ blok24:
 		mov unisten24, 0h
 		call dec_poeni
 		call dec_poeni
+		mov boja, 05h
 			
 blok31:
 		cmp unisten31, 0h
@@ -475,6 +485,7 @@ blok31:
 		jg blok32
 		mov unisten31, 0h
 		call dec_poeni
+		mov boja, 06h
 		
 blok32:
 		cmp unisten32, 0h
@@ -498,6 +509,7 @@ blok32:
 		jg blok33
 		mov unisten32, 0h
 		call dec_poeni
+		mov boja, 06h
 		
 blok33:
 		cmp unisten33, 0h
@@ -521,6 +533,7 @@ blok33:
 		jg blok34
 		mov unisten33, 0h
 		call dec_poeni
+		mov boja, 06h
 		
 blok34:
 		cmp unisten34, 0h
@@ -544,6 +557,7 @@ blok34:
 		jg zavrsi
 		mov unisten34, 0h
 		call dec_poeni
+		mov boja, 06h
 
 zavrsi:
 		ret
@@ -582,6 +596,7 @@ zavrsi:
 	DEC_POENI ENDP
 	
 	
+;---------------------------------------------------------------------------------crtanje loptice------------------------------------------------------	
 	DRAW_BALL PROC NEAR
 		
 		mov cx,BALL_X ; postavi inicijalnu kolonu (X)
@@ -592,19 +607,30 @@ zavrsi:
 			
 			cmp boja,1h
 			jne purple
-			mov al,0fh ; izaberi belu boju
+			mov al,0Fh ; izaberi belu boju
 		purple:
-			cmp boja,02h  ;sudar leve- ljubicasta loptica
-			jne lblue
+			cmp boja,02h  ;sudar leve,desne, gornje - ljubicasta loptica
+			jne blue
 			mov al,05h
-		lblue:	
-			cmp boja,03h  ;sudar desne- plava loptica
-			jne lred
-			mov al,0Bh
-		lred:
-			cmp boja,04h  ;sudar gornje- crvena loptica
-			jne dalje
-			mov al, 0Ch
+		blue:	
+			cmp boja,03h  ;platforma -plava 
+			jne red
+			mov al,01h
+		red:
+			cmp boja,04h  ;blok-prvi red (crvena)
+			jne yellow
+			mov al, 04h
+		
+		yellow:
+			cmp boja,05h  ;blok-drugi red (zuta)
+			jne green
+			mov al, 0Eh
+			
+		green:
+			cmp boja,06h  ;blok-treci red (zelena)
+			jne dalje 
+			mov al, 02h
+			
 			
 		dalje:
 			mov bh,00h ; 
