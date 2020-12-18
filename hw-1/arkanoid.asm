@@ -1070,10 +1070,21 @@ zavrsi:
 			cmp ax, 0
 			jle krajl
 			dec PLATFORMA_X
+			
+			mov ax, PLATFORMA_X
+			cmp ax, 0
+			jle krajl
+			dec PLATFORMA_X
 		krajl:
 			ret
 			
 		right:
+			mov ax, PLATFORMA_X
+			add ax, PLATFORMA_WIDTH
+			cmp ax, WINDOW_WIDTH
+			jge krajd
+			inc PLATFORMA_X
+			
 			mov ax, PLATFORMA_X
 			add ax, PLATFORMA_WIDTH
 			cmp ax, WINDOW_WIDTH
